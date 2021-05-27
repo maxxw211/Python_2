@@ -1,14 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Book detail page</h1><hr>
-    {{ book.title }}<br>
-    {{ book.text }}<br>
-    <i>{{ book.author }}</i><br>
-    {{ book.date_publish|date:'d.m.Y' }}<br><br>
+<div class="container">
+    <h1>Book detail page</h1><hr>
+        {{ book.title }}<br>
+     <i>{{ book.author }}</i><br>
+        {{ book.text }}<br><br>
+        {{ book.count_likes }}<br>
+        {{ book.date_publish|date:'d.m.Y' }}<br><br><hr>
+        {% for comment in book.comments.all %}
+        <p>{{ comment.text }}</p>
+        <p>Date: {{ comment.date|date:'d.m.Y H:m:s' }}</p>
+        <p>Author: {{ comment.user.username}}</p>
+        <p>Likes: {{comment.count_likes }}</p>
+    {% endfor %}
+    <br><hr>
+
+    <form action="{% url 'add-comment' book_id=book.id %}" method="POST">
+         {% csrf_token %}
+    <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea class="form-control" rows="4" id="comment" name="text" required></textarea>
+    </div>
+        <input button type="submit" class="btn btn-success" value="Отправить">
+    </form>
+</div>
 </body>
 </html>

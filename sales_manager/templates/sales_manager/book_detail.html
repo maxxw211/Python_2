@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    {% include 'sales_manager/book_view.html' with book=book with_comment=True %}
+    {% include 'sales_manager/book_view.html' with book=book with_comment=True redirect_url='book_detail' %}
     <hr>
     <form action="{% url 'add-comment' book_id=book.id %}" method="POST">
          {% csrf_token %}
@@ -10,7 +10,7 @@
         <label for="comment">Comment:</label>
         <textarea class="form-control" rows="4" id="comment" name="text" required></textarea>
     </div>
-        <input button type="submit" class="btn btn-success" value="Отправить">
+        <input type="submit" class="btn btn-success" value="Отправить">
     </form>
 </div>
 {% endblock %}

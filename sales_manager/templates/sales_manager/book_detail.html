@@ -3,7 +3,6 @@
 {% block content %}
 <div class="container">
     {% include 'sales_manager/book_view.html' with book=book with_comment=True redirect_url='book_detail' %}
-    <hr>
     <form action="{% url 'add-comment' book_id=book.id %}" method="POST">
          {% csrf_token %}
     <div class="form-group">

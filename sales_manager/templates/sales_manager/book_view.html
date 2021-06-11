@@ -1,15 +1,34 @@
- <h5><a href="{% url 'book_detail' book_id=book.id %}">{{ book.title }}</a></h5><br>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% load static %}
+<style>.checked {color: orange}</style>
+<script src="{% static 'script.js' %}"></script>
+
+<h5><a href="{% url 'book_detail' book_id=book.id %}">{{ book.title }}</a></h5><br>
      <i>{{ book.author.username }}</i><br>
         {{ book.text }}<br><br>
         {{ book.date_publish|date:'d.m.Y' }}<br>
-    <a href="{% url 'book-like' book_id=book.id redirect_url=redirect_url %}">
-        <i>likes {{ book.rate_avg }}</i></a><br><br><br>
- {% if with_comment %}
+        {% for i in rate_list %}
+            <a href="{% url 'book-rate' book_id=book.id rate=i redirect_url=redirect_url %}">
+                {% if book.avg_rate >= i %}
+                    <span class="likes fa fa-star checked"></span>
+                {% else %}
+                    <span class="likes fa fa-star"></span>
+                {% endif %}
+                    </a>
+        {% endfor %}
+        <span class="rate_list">{{ book.avg_rate }}</span>
+
+<br><br><br>
+{% if with_comment %}
     {% for comment in book.comments.all %}
-    <p>{{ comment.text }}</p>
-    <p>Date: {{ comment.date|date:"d.m.Y  H:i:s" }}</p>
-    <p>Author: {{comment.user.username }}</p>
-    <p>Likes: {{ comment.count_likes }}</p>
+        <p>{{ comment.text }}</p>
+        <p>Date: {{ comment.date|date:"d.m.Y  H:i:s" }}</p>
+        <p>Author: {{comment.user.username }}</p>
+            <p class="comment-like" id="comment_like_{{ comment.id }}">
+                Likes: {{ comment.count_likes }}
+            </p>
+
+        <hr>
     {% endfor %}
- {% endif %}
- <br>
+{% endif %}
+<br>

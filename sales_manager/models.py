@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from sales_manager.chortcut import upload_to
 
 
 class Book(models.Model):
@@ -20,7 +21,7 @@ class Book(models.Model):
     date_publish = models.DateField(auto_now_add=True, db_index=True)
     avg_rate = models.DecimalField(
         max_digits=5,
-        decimal_places=2,
+        decimal_places=1,
         null=True,
         blank=True
     )
@@ -30,14 +31,20 @@ class Book(models.Model):
         blank=True,
         through='UserRateBook'
     )
+    img = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
     def __str__(self):
         return self.title
+
+    def delete(self, using=None, keep_parents=False):
+        self.img.delete()
+        super().delete()
 
 
 class UserRateBook(models.Model):
     class Meta:
         unique_together = ('user', 'book')
+
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=3)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rated_user')
     rate = models.PositiveSmallIntegerField(

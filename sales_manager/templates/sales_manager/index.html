@@ -1,9 +1,11 @@
 {% extends 'sales_manager/main.html' %}
-
+{% load static %}
 {% block content %}
+<img src="{% static 'b_shop.jpg' %}" wight="500%">
 <div class="container">
     <h2>Hello, this is main page</h2><hr>
     {% for book in books %}
+        <img src="{{ book.img.url }}">
         {% include 'sales_manager/book_view.html' with book=book with_comment=False redirect_url='main-page' %}
     {% endfor %}
 </div>

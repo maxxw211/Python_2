@@ -4,6 +4,9 @@ from django.db.models import Avg
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
+from rest_framework.serializers import ModelSerializer
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from sales_manager.models import Book, Comment, UserRateBook
 from django.views import View
 from sales_manager.utils import get_book_with_comment
@@ -81,8 +84,18 @@ def comment_like(request, comment_id):
 
 
 def add_like_ajax(request):
-    comment_id = request.GET['comment_id'].split("_")[-1]
+    comment_id = request.POST['comment_id']
     query_com = Comment.objects.filter(id=comment_id)
     if query_com.exists():
-        return HttpResponse("hello from server")
+        com = query_com.first()
+        if request.user in com.like.all():
+            com.like.remove(request.user)
+        else:
+            com.like.add(request.user)
+        return HttpResponse(com.like.count())
     return HttpResponseNotFound("error")
+
+
+
+
+

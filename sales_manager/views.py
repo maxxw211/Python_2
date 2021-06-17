@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Avg
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from rest_framework import status
 from rest_framework.response import Response
@@ -13,12 +13,14 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.generics import ListAPIView, ListCreateAPIView, GenericAPIView, UpdateAPIView, \
     RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.views import APIView
+
 from sales_manager.models import Book, Comment, UserRateBook
 from django.views import View
 from django_filters import rest_framework as filters
 
 from sales_manager.paginator import MyPagination
-from sales_manager.serializers import BookSerializer
+from sales_manager.serializers import BookSerializer, RateBookSerializer
 from sales_manager.utils import get_book_with_comment
 from rest_framework import filters
 
@@ -156,3 +158,22 @@ class BookUpdateApi(RetrieveUpdateDestroyAPIView):
     """hello"""
     queryset = Book.objects
     serializer_class = BookSerializer
+
+
+class AddRateBookAPI(APIView):
+    serializer_class = RateBookSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, TokenAuthentication, BasicAuthentication]
+
+    def put(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        book = get_object_or_404(Book, id=serializer.data['book_id'])
+        UserRateBook.objects.update_or_create(
+            user_id=request.user.id,
+            book_id=book.id,
+            defaults={"rate": serializer.data['rate']}
+        )
+        book.avg_rate = book.rated_user.aggregate(rate=Avg("rate"))["rate"]
+        book.save(update_fields=["avg_rate"])
+        return Response({"avg_rate": book.avg_rate}, status=status.HTTP_201_CREATED)

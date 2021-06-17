@@ -64,3 +64,5 @@ class Comment(models.Model):
     )
     like = models.ManyToManyField(User, related_name='liked_comments', blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='comments')
+
+

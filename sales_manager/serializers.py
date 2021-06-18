@@ -12,9 +12,6 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    #  author = AuthorSerializer()
-    #  username = CharField(source="author.username")
-
     class Meta:
         model = Book
         fields = ["title", "text", "img", "author", "id", "avg_rate"]
@@ -24,9 +21,15 @@ class RateBookSerializer(serializers.Serializer):
     rate = serializers.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     book_id = serializers.IntegerField()
 
- #   def validate_rate(self, instance):
-  #      if instance > 5:
-  #          raise serializers.ValidationError("rate must be less than 5")
-   #     if instance < 0:
-   #         raise serializers.ValidationError("rate must be more than 5")
-   #     return instance
+
+#   def validate_rate(self, instance):
+#      if instance > 5:
+#          raise serializers.ValidationError("rate must be less than 5")
+#     if instance < 0:
+#         raise serializers.ValidationError("rate must be more than 5")
+#     return instance
+
+class CreateBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ["title", "text", "img", "author", "id"]

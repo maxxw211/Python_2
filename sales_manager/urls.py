@@ -11,7 +11,8 @@ urlpatterns = [
     path('comment_like/<int:comment_id>/', views.comment_like, name='comment-like'),
     path('show_all_books/', views.BookListAPIView.as_view()),
     path("show_all_books/<int:pk>", views.BookDetail.as_view()),
-    path("update_book/<int:pk>", views.BookUpdateApi.as_view()),
-    path("add_rate_book_api/", views.AddRateBookAPI.as_view()),
+    path("update_book/<int:pk>", views.BookUpdateAPI.as_view()),
+    path("add_rate_book_api/", views.AddRateBookAPI.as_view(), name="add-rate-book"),
+    path("create_book/", views.BookCreate.as_view(), name='create-book'),
     path('', views.main_page, name='main-page')
 ]

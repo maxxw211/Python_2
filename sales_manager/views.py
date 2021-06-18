@@ -7,11 +7,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, CharField
-from rest_framework import views
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.generics import ListAPIView, ListCreateAPIView, GenericAPIView, UpdateAPIView, \
-    RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 
@@ -20,7 +17,7 @@ from django.views import View
 from django_filters import rest_framework as filters
 
 from sales_manager.paginator import MyPagination
-from sales_manager.serializers import BookSerializer, RateBookSerializer
+from sales_manager.serializers import BookSerializer, RateBookSerializer, CreateBookSerializer
 from sales_manager.utils import get_book_with_comment
 from rest_framework import filters
 
@@ -154,10 +151,14 @@ class BookDetail(GenericAPIView):
 
 # CRUD
 
-class BookUpdateApi(RetrieveUpdateDestroyAPIView):
-    """hello"""
+class BookUpdateAPI(RetrieveUpdateDestroyAPIView):
     queryset = Book.objects
     serializer_class = BookSerializer
+
+
+class BookCreate(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CreateBookSerializer
 
 
 class AddRateBookAPI(APIView):

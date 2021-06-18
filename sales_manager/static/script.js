@@ -28,8 +28,9 @@ $("document").ready (
                 "comment_id": comment_id.split("_")[2],
                 "csrfmiddlewaretoken": csrftoken
                 },
-                "method":"post",
-                success:function (data) {
+                headers: { 'X-CSRFToken': csrftoken },
+                method: "put",
+                success: function (data) {
                     $(`#${comment_id}`).html(`Likes: ${data}`)
                 },
                 error: function (data) {

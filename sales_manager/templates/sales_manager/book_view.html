@@ -1,8 +1,13 @@
 {% load static %}
 <script src="{% static 'script.js' %}" ></script>
+
+
 <h5><a href="{% url 'book_detail' book_id=book.id %}">{{ book.title }}</a></h5><br>
-     <i>{{ book.author.username }}</i><br>
-        {{ book.text }}<br><br>
+        {% if book.img %}
+            <img src="{{ book.img.url }}" width="15%">
+        {% endif %}
+     <i>{{ book.author.username }}</i><br><br>
+     <p>{{ book.text }}</p>
         {{ book.date_publish|date:'d.m.Y' }}<br>
      <i>Rate: {{book.avg_rate}}</i>
         {% for i in "12345" %}
@@ -13,8 +18,8 @@
 <br><br><br>
 {% if with_comment %}
     {% for comment in book.comments.all %}
-        <p>{{ comment.text }}</p>
-        <p>Date: {{ comment.date|date:"d.m.Y  H:i:s" }}</p>
+        {{ comment.text }}<br>
+        Date: {{ comment.date|date:"d.m.Y  H:i:s" }}<br>
         <p>Author: {{comment.user.username }}</p>
             <p class="comment-like" id="comment_like_{{comment.id}}" >
                 Likes: {{ comment.count_likes }}

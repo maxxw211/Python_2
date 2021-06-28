@@ -24,7 +24,7 @@ from rest_framework import filters
 
 def main_page(request):
     query_set = get_book_with_comment()
-    context = {'books': query_set, "rate_list": list(range(1, 6))}
+    context = {'books': query_set}
     return render(request, 'sales_manager/index.html', context=context)
 
 

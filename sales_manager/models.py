@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from rest_framework.views import APIView
 from sales_manager.chortcut import upload_to
 
 
